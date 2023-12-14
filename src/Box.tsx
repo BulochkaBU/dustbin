@@ -1,22 +1,22 @@
-import { memo } from "react";
 import { useDrag } from "react-dnd";
+import { Category } from "./ItemTypes";
 
 export interface BoxProps {
   name: string;
-  category: string;
+  currentCategory: Category;
   isDropped: boolean;
 }
 
-export const Box = memo(function Box({ name, category, isDropped }: BoxProps) {
+export const Box = function Box({ name, currentCategory, isDropped }: BoxProps) {
   const [{ opacity }, drag] = useDrag(
     () => ({
-      type: category,
+      type: currentCategory,
       item: { name },
       collect: (monitor) => ({
         opacity: monitor.isDragging() ? 0.4 : 1,
       }),
     }),
-    [name, category]
+    [name, currentCategory]
   );
 
   return (
@@ -29,4 +29,4 @@ export const Box = memo(function Box({ name, category, isDropped }: BoxProps) {
       {isDropped ? <s>{name}</s> : name}
     </div>
   );
-});
+};

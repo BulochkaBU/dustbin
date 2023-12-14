@@ -1,16 +1,12 @@
-export interface CategoriesTypes {
-  FOOD: string;
-  GLASS: string;
-  PAPER: string;
-}
-
-export const Categories: CategoriesTypes = {
-  FOOD: "food",
-  GLASS: "glass",
-  PAPER: "paper",
-};
+export type CategoryTypes = "FOOD" | "PAPER" | "GLASS";
 
 export interface ProductTypes {
-  name?: string;
-  currentCategory?: string[];
+  id: number;
+  name: string;
+  currentCategory: CategoryTypes;
+}
+
+export interface DustbinTypes {
+  accepts: CategoryTypes[];
+  addedProductsInDustbin: ProductTypes[];
 }

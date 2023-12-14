@@ -1,99 +1,51 @@
-import update from "immutability-helper";
-import { memo, useCallback, useState } from "react";
+import { useSelector } from "react-redux";
+import { DustbinState } from "./dustbinSlice";
 
-import { Box } from "./Box";
-import { Dustbin } from "./Dustbin";
-import { Categories, ProductTypes } from "./ItemTypes";
+function Container() {
+  const selectProducts = (state: DustbinState) => state.tt.products;
+  const products = useSelector(selectProducts);
+  console.log(products);
 
-interface DustbinState {
-  accepts: string[];
-  addedProducts: ProductTypes[];
-}
-
-interface BoxState {
-  name: string;
-  category: string;
-}
-
-export interface DustbinSpec {
-  accepts: string[];
-  addedProducts: ProductTypes[];
-}
-export interface BoxSpec {
-  name: string;
-  addedProducts: ProductTypes[];
-}
-export interface ContainerState {
-  droppedBoxNames: string[];
-  dustbins: DustbinSpec[];
-  boxes: BoxSpec[];
-}
-
-export const Container = memo(function Container() {
-  const [dustbins, setDustbins] = useState<DustbinState[]>([
-    { accepts: [Categories.GLASS], addedProducts: [] },
-    { accepts: [Categories.FOOD], addedProducts: [] },
-    {
-      accepts: [Categories.PAPER, Categories.GLASS],
-      addedProducts: [],
-    },
-    { accepts: [Categories.PAPER], addedProducts: [] },
-  ]);
-
-  const [boxes] = useState<BoxState[]>([
-    { name: "Bottle", category: Categories.GLASS },
-    { name: "Banana", category: Categories.FOOD },
-    { name: "Magazine", category: Categories.PAPER },
-  ]);
-
-  const [droppedBoxNames, setDroppedBoxNames] = useState<string[]>([]);
-
-  function isDropped(list: string[], boxName: string) {
-    return list.indexOf(boxName) > -1;
-  }
-
-  const handleDrop = useCallback(
-    (index: number, product: ProductTypes) => {
-      const productWithCategory = {
-        ...product,
-        currentCategory: dustbins[index].accepts,
-      };
-
-      setDroppedBoxNames(update(droppedBoxNames, product.name ? { $push: [product.name] } : { $push: [] }));
-      setDustbins(
-        update(dustbins, {
-          [index]: {
-            addedProducts: {
-              $push: [productWithCategory],
-            },
-          },
-        })
-      );
-    },
-    [droppedBoxNames, dustbins]
-  );
+  // const handleDrop = useCallback(
+  //   (product: ProductTypes, index: number) => {
+  //     dispatch(setDroppedBoxNames({ product }));
+  //     dispatch(addProductToDustbin({ product, dustbinIndex: index }));
+  //   },
+  //   [droppedBoxNames, dustbins]
+  // );
 
   return (
     <div>
-      <div className="flex justify-center">
-        {dustbins.map(({ accepts, addedProducts }, index) => (
-          <Dustbin
-            accept={accepts}
-            addedProducts={addedProducts}
-            onDrop={(product) => handleDrop(index, product)}
-            key={index}
-            isDropped={(product) => isDropped(droppedBoxNames, product.name || "")}
-          />
+      <div>
+        {products.map((product, index) => (
+          <div key={index}>{product.name}</div>
         ))}
       </div>
+      {/* <div className="flex justify-center">
+        {dustbins.length > 0 &&
+          dustbins.map(({ accepts }, index) => (
+            <Dustbin
+              accept={accepts}
+              // addedProductsInDustbin={addedProductsInDustbin}
+              // onDrop={(product) => handleDrop(product, index)}
+              key={index}
+            />
+          ))}
+      </div> */}
 
-      <div className="flex justify-center">
-        {boxes.map(({ name, category }, index) => (
-          <Box name={name} category={category} isDropped={isDropped(droppedBoxNames, name)} key={index} />
-        ))}
-      </div>
+      {/* <div className="flex justify-center">
+        {products &&
+          products.map(({ name, currentCategory }, index) => (
+            <Box
+              name={name}
+              currentCategory={currentCategory}
+              isDropped={isDropped(name)}
+              key={index}
+            />
+          ))}
+      </div> */}
     </div>
   );
-});
+}
 
 export default Container;
