@@ -5,60 +5,56 @@ import { Categories } from "./const";
 export interface DustbinState {
   dustbins: DustbinTypes[];
   products: ProductTypes[];
-  addedProductsInDustbin: ProductTypes[];
-  droppedBoxNames: string[];
 }
 
 const initialState: DustbinState = {
   dustbins: [
-    { accepts: [Categories.GLASS], addedProductsInDustbin: [] },
-    { accepts: [Categories.FOOD], addedProductsInDustbin: [] },
+    { id: 3, accepts: [Categories.GLASS], addedProductsInDustbin: [] },
+    { id: 2, accepts: [Categories.FOOD], addedProductsInDustbin: [] },
     {
-      accepts: [Categories.PAPER, Categories.GLASS],
+      id: 1,
+      accepts: [Categories.GLASS, Categories.PAPER],
       addedProductsInDustbin: [],
     },
-    { accepts: [Categories.PAPER], addedProductsInDustbin: [] },
+    { id: 6, accepts: [Categories.PAPER], addedProductsInDustbin: [] },
   ],
   products: [
-    { id: 12, name: "Bottle", currentCategory: Categories.GLASS },
-    { id: 14, name: "Banana", currentCategory: Categories.FOOD },
-    { id: 16, name: "Magazine", currentCategory: Categories.PAPER },
+    { id: 12, name: "Bottle", currentCategory: [Categories.GLASS], isDropped: false },
+    { id: 14, name: "Banana", currentCategory: [Categories.FOOD], isDropped: false },
+    { id: 16, name: "Magazine", currentCategory: [Categories.PAPER], isDropped: false },
   ],
-  addedProductsInDustbin: [],
-  droppedBoxNames: [],
 };
 
 const dustbinSlice = createSlice({
   name: "tt",
   initialState,
   reducers: {
-    removeProductFromDustbin(
+    addProductToDustbin: (
       state,
-      action: PayloadAction<{ product: ProductTypes; dustbinIndex: number }>
-    ) {
-      const { product, dustbinIndex } = action.payload;
-      state.dustbins[dustbinIndex].addedProductsInDustbin = state.dustbins[
-        dustbinIndex
-      ].addedProductsInDustbin.filter((item) => item.name !== product.name);
-      state.addedProductsInDustbin = state.addedProductsInDustbin.filter(
-        (item) => item.name !== product.name
+      action: PayloadAction<{ index: number; product: ProductTypes }>
+    ) => {
+      const { index, product } = action.payload;
+
+      const productWithCategory: ProductTypes = {
+        ...product,
+        currentCategory: state.dustbins[index].accepts,
+      };
+
+      const isProductInDustbin = state.dustbins.some((dustbin) =>
+        dustbin.addedProductsInDustbin.some((addedProduct) => addedProduct.name === product.name)
       );
-    },
-    addProductToDustbin(
-      state,
-      action: PayloadAction<{ product: ProductTypes; dustbinIndex: number }>
-    ) {
-      const { product, dustbinIndex } = action.payload;
-      state.dustbins[dustbinIndex].addedProductsInDustbin.push(product);
-      state.addedProductsInDustbin.push(product);
-    },
-    setDroppedBoxNames(state, action: PayloadAction<{ product: ProductTypes }>) {
-      const { product } = action.payload;
-      product.name ? state.droppedBoxNames.push(product.name) : null;
+
+      if (!isProductInDustbin) {
+        state.dustbins[index].addedProductsInDustbin.push(productWithCategory);
+        state.products.map((product) => {
+          if (product.id === productWithCategory.id) {
+            product.isDropped = true;
+          }
+        });
+      }
     },
   },
 });
 
-export const { removeProductFromDustbin, addProductToDustbin, setDroppedBoxNames } =
-  dustbinSlice.actions;
+export const { addProductToDustbin } = dustbinSlice.actions;
 export default dustbinSlice.reducer;
