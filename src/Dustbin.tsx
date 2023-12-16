@@ -1,5 +1,6 @@
 import { useDrop } from "react-dnd";
 import { ProductTypes } from "./ItemTypes";
+import { AddedProduct } from "./AddedProduct";
 
 export interface DustbinProps {
   accept: string[];
@@ -34,12 +35,12 @@ export const Dustbin = function Dustbin({ accept, onDrop, addedProductsInDustbin
       {isActive ? "Release to drop" : `${accept.join(", ")}`}
 
       {addedProductsInDustbin?.map((product) => (
-        <p
-          key={product.name}
-          className="p-2 my-1 bg-pink-300 text-black flex justify-center rounded"
-        >
-          {product.name}
-        </p>
+        <AddedProduct
+          name={product.name}
+          currentCategory={product.currentCategory}
+          id={product.id}
+          key={product.id}
+        />
       ))}
     </div>
   );

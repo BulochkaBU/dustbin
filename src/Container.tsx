@@ -31,14 +31,8 @@ function Container() {
       </div>
 
       <div className="flex justify-center">
-        {products.map(({ id, name, currentCategory, isDropped }) => (
-          <Box
-            id={id}
-            name={name}
-            currentCategory={currentCategory}
-            isDropped={isDropped}
-            key={id}
-          />
+        {products.map(({ id, name, currentCategory }) => (
+          <Box id={id} name={name} currentCategory={currentCategory} key={id} />
         ))}
       </div>
     </div>
