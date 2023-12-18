@@ -29,18 +29,13 @@ export const Dustbin = function Dustbin({ accept, onDrop, addedProductsInDustbin
   return (
     <div
       ref={drop}
-      className={`h-48 w-48 mr-6 mb-6 text-white p-4 text-center text-base  leading-normal flex flex-col ${backgroundColor} rounded-md`}
+      className={`h-48 overflow-y-auto w-48 mr-6 mb-6 text-white p-4 text-center text-base  leading-normal flex flex-col ${backgroundColor} rounded-md`}
       data-testid="dustbin"
     >
       {isActive ? "Release to drop" : `${accept.join(", ")}`}
 
       {addedProductsInDustbin?.map((product) => (
-        <AddedProduct
-          name={product.name}
-          currentCategory={product.currentCategory}
-          id={product.id}
-          key={product.id}
-        />
+        <AddedProduct product={product} key={product.id} />
       ))}
     </div>
   );

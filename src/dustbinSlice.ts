@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DustbinTypes, ProductTypes } from "./ItemTypes";
-import { Categories } from "./const";
+import { dustbins, products } from "./const";
 
 export interface DustbinState {
   dustbins: DustbinTypes[];
@@ -8,25 +8,12 @@ export interface DustbinState {
 }
 
 const initialState: DustbinState = {
-  dustbins: [
-    { id: 3, accepts: [Categories.GLASS], addedProductsInDustbin: [] },
-    { id: 2, accepts: [Categories.FOOD], addedProductsInDustbin: [] },
-    {
-      id: 1,
-      accepts: [Categories.PAPER, Categories.GLASS],
-      addedProductsInDustbin: [],
-    },
-    { id: 6, accepts: [Categories.PAPER], addedProductsInDustbin: [] },
-  ],
-  products: [
-    { id: 12, name: "Bottle", currentCategory: Categories.GLASS },
-    { id: 14, name: "Banana", currentCategory: Categories.FOOD },
-    { id: 16, name: "Magazine", currentCategory: Categories.PAPER },
-  ],
+  dustbins: dustbins,
+  products: products,
 };
 
 const dustbinSlice = createSlice({
-  name: "tt",
+  name: "dustbinsSlice",
   initialState,
   reducers: {
     addProductToDustbin: (
@@ -35,17 +22,29 @@ const dustbinSlice = createSlice({
     ) => {
       const { index, product } = action.payload;
 
-      const isProductInDustbin = state.dustbins[index].addedProductsInDustbin.some(
-        (addedProduct) => addedProduct.name === product.name
+      const productWithCategory: ProductTypes = {
+        ...product,
+        currentDustbinIndex: index,
+      };
+
+      const isProductInDustbin = state.dustbins.some((dustbin) =>
+        dustbin.addedProductsInDustbin.some((addedProduct) => addedProduct.id === product.id)
       );
 
       if (!isProductInDustbin) {
-        state.dustbins[index].addedProductsInDustbin.push(product);
-
+        state.dustbins[index].addedProductsInDustbin.push(productWithCategory);
         state.products = state.products.filter((p) => p.id !== product.id);
-        // state.dustbins[index].addedProductsInDustbin = state.dustbins[
-        //   index
-        // ].addedProductsInDustbin.filter((p) => p.id !== productWithCategory.id);
+      } else {
+        const binIndex = state.dustbins.findIndex((dustbin) =>
+          dustbin.addedProductsInDustbin.some((p) => p.id === product.id)
+        );
+
+        if (binIndex !== -1) {
+          state.dustbins[binIndex].addedProductsInDustbin = state.dustbins[
+            binIndex
+          ].addedProductsInDustbin.filter((p) => p.id !== product.id);
+        }
+        state.dustbins[index].addedProductsInDustbin.push(productWithCategory);
       }
     },
   },

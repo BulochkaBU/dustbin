@@ -1,25 +1,20 @@
 import { useDrag } from "react-dnd";
+import { ProductTypes } from "./ItemTypes";
 
 export interface AddedProductProps {
-  name: string;
-  currentCategory: string;
-  id: number;
+  product: ProductTypes;
 }
 
-export const AddedProduct = function AddedProduct({
-  id,
-  name,
-  currentCategory,
-}: AddedProductProps) {
+export const AddedProduct = function AddedProduct({ product }: AddedProductProps) {
   const [{ opacity }, drag] = useDrag(
     () => ({
-      type: currentCategory,
-      item: { name, id, currentCategory },
+      type: product.category,
+      item: product,
       collect: (monitor) => ({
         opacity: monitor.isDragging() ? 0.4 : 1,
       }),
     }),
-    [name, currentCategory]
+    [product, product.category]
   );
 
   return (
@@ -29,7 +24,7 @@ export const AddedProduct = function AddedProduct({
       data-testid="added-product"
       style={{ opacity }}
     >
-      {name}
+      {product.name}
     </div>
   );
 };

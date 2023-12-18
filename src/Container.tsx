@@ -7,8 +7,12 @@ import { ProductTypes } from "./ItemTypes";
 
 function Container() {
   const dispatch = useDispatch();
-  const products = useSelector((state: { tt: DustbinState }) => state.tt.products);
-  const dustbins = useSelector((state: { tt: DustbinState }) => state.tt.dustbins);
+  const products = useSelector(
+    (state: { dustbinsSlice: DustbinState }) => state.dustbinsSlice.products
+  );
+  const dustbins = useSelector(
+    (state: { dustbinsSlice: DustbinState }) => state.dustbinsSlice.dustbins
+  );
 
   const handleDrop = useCallback(
     (index: number, product: ProductTypes) => {
@@ -31,8 +35,8 @@ function Container() {
       </div>
 
       <div className="flex justify-center">
-        {products.map(({ id, name, currentCategory }) => (
-          <Box id={id} name={name} currentCategory={currentCategory} key={id} />
+        {products.map((product) => (
+          <Box product={product} key={product.id} />
         ))}
       </div>
     </div>

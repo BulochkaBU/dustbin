@@ -3,7 +3,7 @@ import dustbinSlice from "./dustbinSlice";
 
 const store = configureStore({
   reducer: {
-    tt: dustbinSlice,
+    dustbinsSlice: dustbinSlice,
   },
 });
 

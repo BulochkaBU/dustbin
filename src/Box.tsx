@@ -1,21 +1,20 @@
 import { useDrag } from "react-dnd";
+import { ProductTypes } from "./ItemTypes";
 
 export interface BoxProps {
-  name: string;
-  currentCategory: string;
-  id: number;
+  product: ProductTypes;
 }
 
-export const Box = function Box({ id, name, currentCategory }: BoxProps) {
+export const Box = function Box({ product }: BoxProps) {
   const [{ opacity }, drag] = useDrag(
     () => ({
-      type: currentCategory,
-      item: { name, id, currentCategory },
+      type: product.category,
+      item: product,
       collect: (monitor) => ({
         opacity: monitor.isDragging() ? 0.4 : 1,
       }),
     }),
-    [name, currentCategory]
+    [product]
   );
 
   return (
@@ -25,7 +24,7 @@ export const Box = function Box({ id, name, currentCategory }: BoxProps) {
       style={{ opacity }}
       data-testid="box"
     >
-      {name}
+      {product.name}
     </div>
   );
 };
