@@ -1,11 +1,13 @@
 import { useDrag } from "react-dnd";
-import { ProductTypes } from "./ItemTypes";
+import { ProductTypes } from "../const/ItemTypes";
 
-export interface BoxProps {
+export interface ProductProps {
   product: ProductTypes;
+  className?: string;
+  dataTestid: string;
 }
 
-export const Box = function Box({ product }: BoxProps) {
+export const Product = function Product({ product, className, dataTestid }: ProductProps) {
   const [{ opacity }, drag] = useDrag(
     () => ({
       type: product.category,
@@ -18,12 +20,7 @@ export const Box = function Box({ product }: BoxProps) {
   );
 
   return (
-    <div
-      ref={drag}
-      className="border border-dashed border-gray-400 bg-white p-2 mr-6 mb-6 cursor-move flex items-center justify-center"
-      style={{ opacity }}
-      data-testid="box"
-    >
+    <div ref={drag} className={className} data-testid={dataTestid} style={{ opacity }}>
       {product.name}
     </div>
   );

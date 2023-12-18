@@ -1,18 +1,14 @@
-import { useDispatch, useSelector } from "react-redux";
-import { DustbinState, addProductToDustbin } from "./dustbinSlice";
-import { Box } from "./Box";
-import { Dustbin } from "./Dustbin";
 import { useCallback } from "react";
-import { ProductTypes } from "./ItemTypes";
+import { useAppSelector, useAppDispatch } from "../store/hooks";
+import { addProductToDustbin } from "../store/dustbinSlice";
+import { ProductTypes } from "../const/ItemTypes";
+import { Dustbin } from "./Dustbin";
+import { Product } from "./Product";
 
 function Container() {
-  const dispatch = useDispatch();
-  const products = useSelector(
-    (state: { dustbinsSlice: DustbinState }) => state.dustbinsSlice.products
-  );
-  const dustbins = useSelector(
-    (state: { dustbinsSlice: DustbinState }) => state.dustbinsSlice.dustbins
-  );
+  const dispatch = useAppDispatch();
+  const products = useAppSelector((state) => state.dustbinsSlice.products);
+  const dustbins = useAppSelector((state) => state.dustbinsSlice.dustbins);
 
   const handleDrop = useCallback(
     (index: number, product: ProductTypes) => {
@@ -36,7 +32,12 @@ function Container() {
 
       <div className="flex justify-center">
         {products.map((product) => (
-          <Box product={product} key={product.id} />
+          <Product
+            product={product}
+            key={product.id}
+            className="border border-dashed border-gray-400 bg-white p-2 mr-6 mb-6 cursor-move flex items-center justify-center"
+            dataTestid="box"
+          />
         ))}
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DustbinTypes, ProductTypes } from "./ItemTypes";
-import { dustbins, products } from "./const";
+import { DustbinTypes, ProductTypes } from "../const/ItemTypes";
+import { dustbins, products } from "../const/const";
 
 export interface DustbinState {
   dustbins: DustbinTypes[];
