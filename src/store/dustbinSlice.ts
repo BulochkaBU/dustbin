@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DustbinTypes, ProductTypes } from "../const/ItemTypes";
+import { v4 as uuidv4 } from "uuid";
+import { CategoryTypes, DustbinTypes, ProductTypes } from "../const/ItemTypes";
 import { dustbins, products } from "../const/const";
 
 export interface DustbinState {
@@ -47,8 +48,17 @@ const dustbinSlice = createSlice({
         state.dustbins[index].addedProductsInDustbin.push(productWithCategory);
       }
     },
+    createNewProduct: (state, action: PayloadAction<{ name: string; category: CategoryTypes }>) => {
+      const newProduct: ProductTypes = {
+        id: uuidv4(),
+        ...action.payload,
+        currentDustbinIndex: null,
+      };
+
+      state.products.push(newProduct);
+    },
   },
 });
 
-export const { addProductToDustbin } = dustbinSlice.actions;
+export const { addProductToDustbin, createNewProduct } = dustbinSlice.actions;
 export default dustbinSlice.reducer;

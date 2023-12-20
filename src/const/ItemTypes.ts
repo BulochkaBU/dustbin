@@ -1,14 +1,14 @@
-export type CategoryTypes = "FOOD" | "PAPER" | "GLASS";
+export type CategoryTypes = "FOOD" | "PAPER" | "GLASS" | "";
 
 export interface ProductTypes {
-  id: number;
+  id: string;
   name: string;
-  category: CategoryTypes;
+  category: CategoryTypes | string;
   currentDustbinIndex: number | null;
 }
 
 export interface DustbinTypes {
-  id: number;
+  id: string;
   accepts: CategoryTypes[];
   addedProductsInDustbin: ProductTypes[];
 }
