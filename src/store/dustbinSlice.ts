@@ -6,11 +6,15 @@ import { dustbins, products } from "../const/const";
 export interface DustbinState {
   dustbins: DustbinTypes[];
   products: ProductTypes[];
+  searchNameProduct: string;
+  newProduct: boolean;
 }
 
 const initialState: DustbinState = {
   dustbins: dustbins,
   products: products,
+  searchNameProduct: "",
+  newProduct: false,
 };
 
 const dustbinSlice = createSlice({
@@ -48,17 +52,28 @@ const dustbinSlice = createSlice({
         state.dustbins[index].addedProductsInDustbin.push(productWithCategory);
       }
     },
-    createNewProduct: (state, action: PayloadAction<{ name: string; category: CategoryTypes }>) => {
+    createNewProduct: (
+      state,
+      action: PayloadAction<{ searchNameProduct: string; category: CategoryTypes }>
+    ) => {
       const newProduct: ProductTypes = {
         id: uuidv4(),
+        name: action.payload.searchNameProduct,
         ...action.payload,
         currentDustbinIndex: null,
       };
 
       state.products.push(newProduct);
     },
+    setSearchNameProduct: (state, action: PayloadAction<string>) => {
+      state.searchNameProduct = action.payload;
+    },
+    setNewProduct: (state, action: PayloadAction<boolean>) => {
+      state.newProduct = action.payload;
+    },
   },
 });
 
-export const { addProductToDustbin, createNewProduct } = dustbinSlice.actions;
+export const { addProductToDustbin, createNewProduct, setSearchNameProduct, setNewProduct } =
+  dustbinSlice.actions;
 export default dustbinSlice.reducer;
