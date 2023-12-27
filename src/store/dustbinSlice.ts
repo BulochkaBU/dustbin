@@ -8,6 +8,7 @@ export interface DustbinState {
   products: ProductTypes[];
   searchNameProduct: string;
   newProduct: boolean;
+  filter: CategoryTypes;
 }
 
 const initialState: DustbinState = {
@@ -15,6 +16,7 @@ const initialState: DustbinState = {
   products: products,
   searchNameProduct: "",
   newProduct: false,
+  filter: "",
 };
 
 const dustbinSlice = createSlice({
@@ -71,9 +73,17 @@ const dustbinSlice = createSlice({
     setNewProduct: (state, action: PayloadAction<boolean>) => {
       state.newProduct = action.payload;
     },
+    setFilter: (state, action: PayloadAction<CategoryTypes>) => {
+      state.filter = action.payload;
+    },
   },
 });
 
-export const { addProductToDustbin, createNewProduct, setSearchNameProduct, setNewProduct } =
-  dustbinSlice.actions;
+export const {
+  addProductToDustbin,
+  createNewProduct,
+  setSearchNameProduct,
+  setNewProduct,
+  setFilter,
+} = dustbinSlice.actions;
 export default dustbinSlice.reducer;
